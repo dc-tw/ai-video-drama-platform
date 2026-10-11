@@ -30,6 +30,30 @@ deterministic media assembly. Provider-specific generation is isolated under
 `app/integrations`, so a hosted image/video API can be added without changing
 the storyboard schema or editing pipeline.
 
+## Credentials: bring your own API key
+
+This repository does **not** include an OpenAI API key or shared API credits.
+Every user must provide their own key locally:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` without committing or sharing it:
+
+```env
+OPENAI_API_KEY=sk-your-own-key
+```
+
+`.env` is excluded by `.gitignore`; only the empty `.env.example` template is
+tracked. Pydantic Settings loads the local value when the CLI or FastAPI starts.
+Local ComfyUI does not need an OpenAI key, but users must install their own
+checkpoint and set its exact filename in `COMFYUI_CHECKPOINT`.
+
+Offline unit tests use a fake client and a non-secret `test-key`. Tests that
+spend API credits or require running services are skipped unless the matching
+`RUN_LIVE_LLM_TESTS`, `RUN_COMFYUI_TESTS`, or `RUN_E2E_TESTS` flag is enabled.
+
 ## Directory structure
 
 ```text

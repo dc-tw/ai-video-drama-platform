@@ -69,6 +69,7 @@ ai-video-drama-platform/
 │   ├── workers/                       # Background task orchestration
 │   └── main.py
 ├── comfyui/workflows/                 # ComfyUI API workflow templates
+│   └── video/                         # Kandinsky T2V UI + API workflows
 ├── examples/manual_storyboard.json    # LLM-free storyboard example
 ├── data/                              # Runtime inputs, outputs and job data
 ├── tests/
@@ -231,6 +232,24 @@ The pipeline requests three typed scenes, generates one image per scene, and
 writes `output.mp4`. Replace `comfyui/workflows/text_to_image_api.json` with an
 API-format workflow containing the same placeholders to use another checkpoint
 or node graph.
+
+### Video workflow UI reference
+
+The repository also contains an official Kandinsky 5.0 T2V Lite UI graph and a
+flattened API graph:
+
+```text
+comfyui/workflows/video/
+├── kandinsky5_t2v_ui.json   # drag into ComfyUI to inspect the node canvas
+├── kandinsky5_t2v_api.json  # POST /prompt representation
+└── README.md                # models, locations and current limitations
+```
+
+You can also open **Workflows → Browse Templates → Video** in current ComfyUI
+and search for **Kandinsky 5.0 Video Lite Text to Video**. The workflow is
+present locally for inspection, but the application does not execute it yet:
+the required ~13.7 GB of models were not found on this machine, and video
+result downloading still needs to be added to `ComfyUIClient`.
 
 ## Run with Docker Compose
 

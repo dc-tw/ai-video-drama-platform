@@ -82,6 +82,56 @@ Open `http://localhost:8000/docs`, or run the standalone example:
 python -m app.services.storyboard_generator
 ```
 
+### How users enter a story
+
+There is no browser frontend in v0.1 yet. Users can enter a story through the
+CLI for the complete video pipeline, or through FastAPI for storyboard-only
+generation.
+
+**Option A — CLI: generate the complete MP4**
+
+Pass the story directly to `--story`:
+
+```bash
+python main.py \
+  --story "一隻貓在太空漫步，追逐漂浮在太空站外的紅色毛線球。" \
+  --output my-cat-video.mp4
+```
+
+The `--story` value is sent to the LLM, converted into three typed scenes,
+rendered through ComfyUI, and assembled into the selected output file.
+
+**Option B — Swagger UI: inspect structured storyboard generation**
+
+Start the API with `uvicorn app.main:app --reload`, open
+`http://localhost:8000/docs`, expand `POST /api/v1/storyboards/generate`, click
+**Try it out**, and enter:
+
+```json
+{
+  "story_outline": "一隻貓在太空漫步，追逐漂浮在太空站外的紅色毛線球。",
+  "genre": "science fiction",
+  "visual_style": "cinematic realism",
+  "aspect_ratio": "9:16",
+  "target_duration_seconds": 30,
+  "max_scenes": 3
+}
+```
+
+The same storyboard endpoint can be called directly:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/storyboards/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "story_outline": "一隻貓在太空漫步，追逐漂浮在太空站外的紅色毛線球。",
+    "max_scenes": 3
+  }'
+```
+
+This API endpoint currently returns validated storyboard JSON only. Use the
+CLI when you want ComfyUI generation and the final MP4 in one command.
+
 ### Generate your own MP4
 
 1. Install and start ComfyUI. On Apple Silicon, use a native macOS ComfyUI

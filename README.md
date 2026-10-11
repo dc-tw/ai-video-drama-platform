@@ -69,6 +69,7 @@ ai-video-drama-platform/
 │   ├── workers/                       # Background task orchestration
 │   └── main.py
 ├── comfyui/workflows/                 # ComfyUI API workflow templates
+├── examples/manual_storyboard.json    # LLM-free storyboard example
 ├── data/                              # Runtime inputs, outputs and job data
 ├── tests/
 │   ├── unit/                          # Offline schema/workflow tests
@@ -155,6 +156,62 @@ curl -X POST http://localhost:8000/api/v1/storyboards/generate \
 
 This API endpoint currently returns validated storyboard JSON only. Use the
 CLI when you want ComfyUI generation and the final MP4 in one command.
+
+**Option C — Manual storyboard: bypass OpenAI completely**
+
+Copy and edit the included example, then pass the JSON file to the CLI:
+
+```bash
+cp examples/manual_storyboard.json my-storyboard.json
+python main.py \
+  --storyboard my-storyboard.json \
+  --output my-manual-video.mp4
+```
+
+Manual mode performs this path:
+
+```text
+storyboard JSON → Pydantic validation → ComfyUI → FFmpeg → MP4
+```
+
+It does not create an OpenAI client and `OPENAI_API_KEY` may remain empty. Each
+scene must contain a `scene_id`, duration, `prompt`, `negative_prompt`, camera
+metadata, dialogue list, and `character_ref`. FFmpeg uses each scene's
+`duration_seconds` value when assembling the slideshow.
+
+The included minimal text-to-image workflow sends `prompt`, `negative_prompt`,
+checkpoint, and seed to ComfyUI. `character_ref` is currently validated
+metadata only; it is not yet wired to an IP-Adapter node. Repeat the canonical
+character appearance in every scene prompt, or replace the workflow and client
+mapping when adding IP-Adapter. Dialogue is also metadata until TTS is added.
+
+### How the project calls local ComfyUI
+
+Start ComfyUI on port 8188. For a source installation this is typically run
+from the ComfyUI directory:
+
+```bash
+python main.py --listen 127.0.0.1 --port 8188
+```
+
+Check that the server is reachable:
+
+```bash
+curl http://127.0.0.1:8188/system_stats
+```
+
+Configure this project:
+
+```env
+COMFYUI_BASE_URL=http://127.0.0.1:8188
+COMFYUI_CHECKPOINT=your-model.safetensors
+COMFYUI_WORKFLOW_PATH=comfyui/workflows/text_to_image_api.json
+```
+
+For every scene, `ComfyUIClient` opens `/ws`, submits the injected workflow to
+`POST /prompt`, waits for `execution_success`, reads `/history/{prompt_id}` and
+downloads the result through `/view`. The files are stored under `data/jobs/`
+before FFmpeg creates the requested MP4.
 
 ### Generate your own MP4
 

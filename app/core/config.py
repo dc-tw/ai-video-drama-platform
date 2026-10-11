@@ -10,7 +10,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    openai_api_key: str
+    openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
     comfyui_base_url: str = "http://localhost:8188"
     comfyui_checkpoint: str = "model.safetensors"

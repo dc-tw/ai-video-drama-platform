@@ -29,6 +29,11 @@ class StoryboardGenerationError(RuntimeError):
 class StoryboardGenerator:
     def __init__(self, settings: Settings, client: Any | None = None) -> None:
         self._model = settings.openai_model
+        if client is None and not settings.openai_api_key:
+            raise StoryboardGenerationError(
+                "OPENAI_API_KEY is required for --story mode. "
+                "Use --storyboard to render a manual storyboard without OpenAI."
+            )
         self._client = client or AsyncOpenAI(api_key=settings.openai_api_key)
 
     async def generate(self, request: StoryboardRequest) -> Storyboard:

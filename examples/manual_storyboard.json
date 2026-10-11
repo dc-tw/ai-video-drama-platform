@@ -1,0 +1,55 @@
+{
+  "title": "太空漫步的橘貓",
+  "logline": "一隻橘貓太空人離開太空站，追上漂浮在宇宙中的紅色毛線球。",
+  "visual_style": "cinematic science fiction, realistic fur, dramatic orbital light",
+  "aspect_ratio": "9:16",
+  "characters": [
+    {
+      "character_id": "cat_01",
+      "name": "小橘",
+      "visual_description": "small orange tabby cat, green eyes, white EVA spacesuit with a blue chest badge",
+      "reference_image_id": null
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "scene_001",
+      "duration_seconds": 3,
+      "location": "space station airlock",
+      "time_of_day": "orbital sunrise",
+      "character_ref": ["cat_01"],
+      "action": "小橘踏出氣閘艙，望向地球。",
+      "shot_size": "wide",
+      "camera_movement": "dolly",
+      "dialogue": [],
+      "prompt": "vertical 9:16 cinematic wide shot, small orange tabby cat with green eyes wearing a white EVA spacesuit with a blue chest badge, stepping out of a space station airlock, Earth below, orbital sunrise, realistic fur, dramatic rim light",
+      "negative_prompt": "text, watermark, logo, duplicate cat, extra limbs, malformed paws, blurry"
+    },
+    {
+      "scene_id": "scene_002",
+      "duration_seconds": 4,
+      "location": "outside the space station",
+      "time_of_day": "orbital daylight",
+      "character_ref": ["cat_01"],
+      "action": "小橘沿著太空站外殼緩慢行走，發現遠方的紅色毛線球。",
+      "shot_size": "medium",
+      "camera_movement": "tracking",
+      "dialogue": [],
+      "prompt": "vertical 9:16 cinematic medium tracking shot, small orange tabby cat with green eyes wearing the same white EVA spacesuit with a blue chest badge, walking on a space station hull, noticing a floating red yarn ball, deep space, realistic fur, crisp reflections",
+      "negative_prompt": "text, watermark, logo, duplicate cat, extra limbs, malformed paws, blurry"
+    },
+    {
+      "scene_id": "scene_003",
+      "duration_seconds": 3,
+      "location": "above the Earth",
+      "time_of_day": "orbital sunset",
+      "character_ref": ["cat_01"],
+      "action": "小橘抓住毛線球，身後的地球進入夕陽。",
+      "shot_size": "close_up",
+      "camera_movement": "static",
+      "dialogue": [],
+      "prompt": "vertical 9:16 cinematic close-up, small orange tabby cat with green eyes wearing the same white EVA spacesuit with a blue chest badge, holding a floating red yarn ball, Earth at orbital sunset behind, joyful expression, realistic fur, warm rim light",
+      "negative_prompt": "text, watermark, logo, duplicate cat, extra limbs, malformed paws, blurry"
+    }
+  ]
+}

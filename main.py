@@ -6,12 +6,19 @@ import logging
 from pathlib import Path
 
 from app.core.config import get_settings
-from app.services.pipeline import run_pipeline
+from app.models.storyboard import Storyboard
+from app.services.pipeline import render_storyboard, run_pipeline
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="AI short-drama generation pipeline")
-    parser.add_argument("--story", required=True, help="Story outline")
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--story", help="Story outline; requires OPENAI_API_KEY")
+    source.add_argument(
+        "--storyboard",
+        type=Path,
+        help="Validated storyboard JSON; bypasses the LLM and OpenAI",
+    )
     parser.add_argument(
         "--output",
         type=Path,
@@ -27,7 +34,14 @@ def main() -> None:
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
-    asyncio.run(run_pipeline(args.story, get_settings(), output_path=args.output))
+    settings = get_settings()
+    if args.storyboard is not None:
+        storyboard = Storyboard.model_validate_json(
+            args.storyboard.read_text(encoding="utf-8")
+        )
+        asyncio.run(render_storyboard(storyboard, settings, output_path=args.output))
+    else:
+        asyncio.run(run_pipeline(args.story, settings, output_path=args.output))
 
 
 if __name__ == "__main__":

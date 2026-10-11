@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "integration: requires a local external binary or service",
+    "live_llm: makes a real LLM API request",
+    "e2e: runs the complete LLM, ComfyUI and FFmpeg pipeline",
+]

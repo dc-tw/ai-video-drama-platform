@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      COMFYUI_BASE_URL: http://comfyui:8188
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace
+      - ./data:/workspace/data
+    depends_on:
+      - comfyui
+    restart: unless-stopped
+
+  # ComfyUI service placeholder. Override COMFYUI_IMAGE for your GPU/CUDA platform.
+  comfyui:
+    image: ${COMFYUI_IMAGE:-ghcr.io/ai-dock/comfyui:latest}
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./data/comfyui/models:/opt/ComfyUI/models
+      - ./data/comfyui/input:/opt/ComfyUI/input
+      - ./data/comfyui/output:/opt/ComfyUI/output
+      - ./comfyui/workflows:/opt/ComfyUI/user/default/workflows
+    environment:
+      WEB_ENABLE_AUTH: "false"
+    restart: unless-stopped
+    # For an NVIDIA host, add the runtime/device reservation required by your
+    # Docker installation and choose a matching COMFYUI_IMAGE.
